@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body
+            {
+                font-family: Arial, sans-serif;
+                background-color: grey;
+                margin: 0;
+                padding: 30px;
+                color: black
+            }
+            h1
+            {
+                text-align: center;
+                font-size: 50px;
+                color: black
+            }
+            form
+            {
+                margin-bottom: 20px;
+            }
+            input, button
+            {
+                padding: 8px;
+                margin: 4px 2px;
+                border-radius: 5px;
+                border: 1px solid beige
+            }
+            button
+            {
+                background-color: black;
+                color: white;
+                border: none;
+                padding: 2px;
+                cursor: pointer;
+            }
+            table
+            {
+                border-collapse: collapse;
+                background-color: white;
+                width: 60%;
+                margin-bottom: 30px;
+            }
+
+            th, td
+            {
+                padding: 10px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+
+            th {
+                background-color: #2c3e50;
+                color: white;
+            }
+        </style>
+        <title>Expense Tracker</title>
+    </head>
+    <body>
+        <h1>Expense Tracker</h1>
+
+        <p>Add your new expenses here</p>
+        <form action="/add" method="POST">
+            <input type ="text" name="category" placeholder="Category" required>
+            <input type = "number" name="amount" placeholder="Amount" required>
+            <select name="priority" required>
+                <option value="green">Needed</option>
+                <option value="orange">Wanted</option>
+                <option value="red">Unwanted</option>
+            </select>
+            <button type="submit">Add Expense</button>
+        </form>
+        <form action="/" method = "GET">
+            <input type = "text" name = "search" placeholder = "Search Category">
+            <button type = "submit">Search</button>
+        </form>
+        <p>Your Expenses</p>
+        <form action = "/" method = "GET">
+            <input type = "hidden" name = "sort" value = "asc">
+            <button type="submit">Lowest to Highest</button>
+        </form>
+        <form action = "/" method = "GET">
+            <input type = "hidden" name = "sort" value = "desc">
+            <button type = "submit">Highest to Lowest</button>
+        </form>
+        <table>
+            <tr>
+                <th style = "width: 40%;">Category</th>
+                <th style = "width: 40%;">Amount</th>
+                <th style = "width: 20%;">Delete</th>
+            </tr>
+            {% for expense in expenses %}
+            <tr>
+                <td>{{ expense[1] }}</td>
+                <td>{{ expense[2] }}</td>
+                <td>
+                    <form action="/delete/{{ expense[0] }}" method="POST">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <table>
+            <tr>
+                <td style = "width: 40%;">Total</td>
+                <td style = "width: 60%;">{{ total }}</td>
+            </tr>
+        </table>
+            <p>Spending By Category</p>
+            <div style="display: flex; align-items: flex-end; gap: 20px; height: 320px; border-left: 2px solid #333; border-bottom: 2px solid #333; padding: 10px;">
+                {% for cat in categories %}
+                <div style="text-align: center;">
+                    <div style="background-color: black; width:50px; height: {{ cat[1]/max_total * 300 }}px; border-radius: 3px 3px 0 0;"></div>
+                    <div style="margin-top: 5px;">{{ cat[0] }}</div>
+                    <div style="font-size: 12px; color: grey;">{{ cat[1] }}$</div>
+                </div>
+                {% endfor %}
+            </div>
+    </body>
+</html>
